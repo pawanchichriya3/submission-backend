@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../utils/errors/app.error";
 
-export const appErrorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
+export const appErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
     console.log(err);
 
-    res.status(err.statusCode).json({
+    const statusCode = (typeof err?.statusCode === 'number') ? err.statusCode : 400;
+    const message = err?.message || "Bad Request";
+
+    res.status(statusCode).json({
         success: false,
-        message: err.message
+        message,
     });
 }
 
